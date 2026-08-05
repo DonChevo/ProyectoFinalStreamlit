@@ -15,10 +15,10 @@ st.sidebar.title("Navegación")
 opcion_menu = st.sidebar.radio(
     "Selecciona un módulo:",
     [
-        "Módulo 1: Home",
-        "Módulo 2: Carga del dataset",
-        "Módulo 3: Análisis Exploratorio de Datos (EDA)",
-        "Módulo 4: Conclusiones finales",
+        "1: Home",
+        "2: Carga del dataset",
+        "3: Análisis Exploratorio de Datos (EDA)",
+        "4: Conclusiones",
     ],
 )
 
