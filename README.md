@@ -18,13 +18,16 @@ conjunto de datos permite aplicar análisis exploratorio, visualización de dato
 modelos predictivos para identificar patrones de clientes que renuevan o no su
 seguro.
 
+### Estructura del Proyecto
+
+```text
 ProyectoFinalStreamlit/
-│
 ├── InsuranceCompany.csv     # El dataset
 ├── README.md                # Descripción del proyecto, capturas e instrucciones (Obligatorio)
 ├── app.py                   # Archivo principal que ejecuta la aplicación de Streamlit
 ├── requirements.txt         # Lista de librerías y dependencias (Obligatorio)
-│
 └── src/                     # Carpeta para el código fuente y lógica de negocio
     ├── __init__.py          # Convierte la carpeta src en un paquete de Python
     └── analyzer.py          # Clase DataAnalyzer/DataProcessor (POO) y lógica del EDA
+```
+
