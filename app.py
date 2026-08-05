@@ -17,7 +17,7 @@ opcion_menu = st.sidebar.radio(
     [
         "1: Home",
         "2: Carga del dataset",
-        "3: Análisis Exploratorio de Datos (EDA)",
+        "3: EDA",
         "4: Conclusiones",
     ],
 )
@@ -69,8 +69,8 @@ if opcion_menu == "Módulo 1: Home":
     with col2:
         # Tarjeta informativa del Autor del Proyecto
         st.info("### Datos del Autor")
-        st.markdown("**Nombre Completo:** [Tu Nombre y Apellido]")
-        st.markdown("**Curso / Especialización:** Data Science / Analítica de Datos")
+        st.markdown("**Nombre Completo:** JULIO CESAR RODRIGUEZ RODRIGUEZ")
+        st.markdown("**Curso / Especialización:** Python Analytics")
         st.markdown("**Año:** 2026")
 
         st.divider()
