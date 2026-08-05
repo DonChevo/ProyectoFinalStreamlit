@@ -65,3 +65,19 @@ Si deseas clonar este repositorio y ejecutar la aplicación en tu entorno local,
 ## 🔗 Enlaces del Proyecto
 *   **Repositorio en GitHub:** https://github.com/DonChevo/ProyectoFinalStreamlit
 *   **Aplicación Desplegada:** https://primerproyectodeportafolioprofesional.streamlit.app
+
+---
+
+## 📸 Capturas de la Aplicación
+
+### Vista Principal (Módulo 1: Home)
+![Pantalla de Bienvenida](Captura_Home.jpg)
+
+### Vista Principal (Módulo 2: Carga de Dataset)
+![Subiendo el archivo csv](Captura_CargaDataSet.jpg)
+
+### Panel de Análisis Exploratorio (Módulo 3: EDA)
+![Gráficos Interactivos](Captura_EDA.png)
+
+### Vista Principal (Módulo 4: Conclusiones)
+![Pantalla de Conclusiones](Captura_Conclusiones.jpg)
