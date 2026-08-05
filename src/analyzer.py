@@ -174,22 +174,33 @@ class DataProcessor:
         return df_frecuencias, fig
 
     def analizar_bivariado_num_cat(self, columna_num: str):
-        """Ítem 7: Análisis bivariado (Numérico vs Categórico).
-
+        """
+        Ítem 7: Análisis bivariado (Numérico vs Categórico).
         Compara cómo se comporta una variable numérica seleccionada según
         si el cliente renovó o no su póliza ('renewal'), usando un Boxplot.
         """
         fig, ax = plt.subplots(figsize=(8, 4))
+        
+        # Clonamos temporalmente la columna convirtiéndola a String (texto)
+        # Esto soluciona el error si los datos vienen mapeados como 0 y 1 enteros.
+        df_temporal = self.df.copy()
+        df_temporal['renewal_txt'] = df_temporal['renewal'].astype(str)
 
-        # Creamos un gráfico de caja (Boxplot) para comparar los grupos
-        sns.boxplot(data=self.df, x="renewal", y=columna_num, palette="Set2", ax=ax)
+        # Creamos el gráfico de caja (Boxplot) apuntando a la nueva columna de texto
+        sns.boxplot(
+            data=df_temporal, 
+            x="renewal_txt", 
+            y=columna_num, 
+            palette="Set2", 
+            ax=ax
+        )
 
         ax.set_title(f"Análisis de {columna_num} segmentado por Renovación (renewal)", fontsize=12)
         ax.set_xlabel("¿Renovó la Póliza? (renewal)")
         ax.set_ylabel(columna_num)
 
-        # Calculamos la media de cada grupo para dar contexto al usuario
-        resumen_medias = self.df.groupby("renewal")[columna_num].mean().to_frame()
+        # Calculamos la media de cada grupo de forma segura usando la columna de texto
+        resumen_medias = df_temporal.groupby("renewal_txt")[columna_num].mean().to_frame()
         resumen_medias.columns = [f"Media de {columna_num}"]
 
         return resumen_medias, fig
