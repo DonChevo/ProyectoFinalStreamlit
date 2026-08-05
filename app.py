@@ -140,9 +140,84 @@ elif opcion_menu == "Módulo 2: Carga del dataset":
 
 elif opcion_menu == "Módulo 3: Análisis Exploratorio de Datos (EDA)":
     st.title("📈 Módulo 3: Análisis Exploratorio de Datos (EDA)")
-    st.warning(
-        "Espacio reservado. Aquí se desplegarán las pestañas (tabs) con los 10 ítems de análisis."
-    )
+    
+    # CONTROL DE FLUJO: Validar que el archivo exista en memoria
+    if "df_seguros" not in st.session_state:
+        st.warning("⚠️ **Acceso denegado:** No se ha detectado ningún dataset en memoria.")
+        st.info("Por favor, dirígete al **Módulo 2: Carga del dataset** en la barra lateral y sube el archivo CSV.")
+    else:
+        # Importación local de la clase para evitar dependencias circulares
+        from src.analyzer import DataProcessor
+        
+        # Instanciar la clase POO con el DataFrame almacenado en sesión
+        df_activo = st.session_state["df_seguros"]
+        procesador = DataProcessor(df_activo)
+        
+        st.write("Explora las métricas fundamentales, distribución de variables y calidad de los datos cargados.")
+        
+        # Creación de pestañas para los primeros 4 ítems solicitados
+        tab1, tab2, tab3, tab4 = st.tabs([
+            "Ítem 1: Info General", 
+            "Ítem 2: Clasificación", 
+            "Ítem 3: Descriptivos", 
+            "Ítem 4: Valores Faltantes"
+        ])
+        
+        # --- ÍTEM 1: INFORMACIÓN GENERAL ---
+        with tab1:
+            st.header("📋 Información General del Dataset")
+            st.write("Muestra un resumen técnico de los tipos de datos mapeados y la completitud del archivo.")
+            
+            info_general = procesador.obtener_info_general()
+            st.dataframe(info_general, use_container_width=True)
+            
+        # --- ÍTEM 2: CLASIFICACIÓN DE VARIABLES ---
+        with tab2:
+            st.header("🗂️ Clasificación Automática de Variables")
+            st.write("Identificación y conteo de tipos de datos estadísticos mediante una función personalizada (POO).")
+            
+            resultado_clase = procesador.clasificar_variables()
+            
+            col_num, col_cat = st.columns(2)
+            with col_num:
+                st.metric(label="Variables Numéricas Detectadas", value=resultado_clase["numéricas"]["conteo"])
+                st.write("**Columnas:**", resultado_clase["numéricas"]["lista"])
+            with col_cat:
+                st.metric(label="Variables Categóricas Detectadas", value=resultado_clase["categóricas"]["conteo"])
+                st.write("**Columnas:**", resultado_clase["categóricas"]["lista"])
+                
+        # --- ÍTEM 3: ESTADÍSTICAS DESCRIPTIVAS ---
+        with tab3:
+            st.header("📊 Resumen de Estadísticas Descriptivas")
+            st.write("Análisis de tendencias centrales, dispersión y frecuencias globales de las variables de seguros.")
+            
+            descriptivos = procesador.obtener_descriptivos()
+            # Mostramos un dataframe con barra de scroll horizontal para fácil lectura
+            st.dataframe(descriptivos, use_container_width=True)
+            
+            st.markdown("""
+            **Interpretación básica preliminar:**
+            *   Revisa la fila `mean` (media) y `50%` (mediana) en las columnas numéricas para evaluar asimetrías.
+            *   Las filas `unique`, `top` y `freq` te darán los primeros indicios del comportamiento de tus variables categóricas.
+            """)
+            
+        # --- ÍTEM 4: ANÁLISIS DE VALORES FALTANTES ---
+        with tab4:
+            st.header("🔍 Análisis de Valores Faltantes (Nulos)")
+            st.write("Evaluación cuantitativa y visual de vacíos de información en el histórico de clientes.")
+            
+            resumen_nulos, figura_nulos = procesador.analizar_valores_faltantes()
+            
+            col_tabla, col_grafico = st.columns([1, 2])
+            with col_tabla:
+                st.write("**Tabla de Frecuencias de Nulos:**")
+                st.dataframe(resumen_nulos, use_container_width=True)
+            with col_grafico:
+                st.write("**Visualización de la distribución de vacíos:**")
+                st.pyplot(figura_nulos)
+                
+            st.caption("Discusión breve: Es fundamental identificar variables con alta concentración de nulos antes de realizar cruces bivariados.")
+
 
 elif opcion_menu == "Módulo 4: Conclusiones finales":
     st.title("🎯 Módulo 4: Conclusiones finales")
