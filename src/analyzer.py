@@ -17,23 +17,27 @@ class DataProcessor:
         """
         self.df = df
 
-    def obtener_info_general(self) -> dict:
-        """Ítem 1: Obtiene información general sobre tipos de datos y nulos."""
-        info = {
-            "dimensiones": self.df.shape,
-            "tipos_datos": self.df.dtypes,
-            "valores_nulos": self.df.isnull().sum(),
-        }
-        return info
+    def obtener_info_general(self) -> pd.DataFrame:
+        """Ítem 1: Información general del dataset.
 
-    def clasificar_variables(self) -> tuple:
-        """Ítem 2: Clasifica de forma automática las variables en numéricas y
-
-        categóricas.
-
-        :return: Tupla con (lista_numericas, lista_categoricas)
+        Simula el comportamiento de .info() construyendo un resumen tabular
+        con los tipos de datos y recuento de valores no nulos.
         """
-        # Excluimos el 'id' por ser un identificador único sin valor estadístico
+        info_df = pd.DataFrame(
+            {
+                "Tipo de Dato": self.df.dtypes.astype(str),
+                "Valores No Nulos": self.df.notnull().sum(),
+                "Valores Nulos": self.df.isnull().sum(),
+            }
+        )
+        return info_df
+
+    def clasificar_variables(self) -> dict:
+        """Ítem 2: Clasificación de variables.
+
+        Usa una función personalizada bajo POO para identificar columnas
+        numéricas y categóricas, excluyendo el 'id'.
+        """
         columnas_analisis = [col for col in self.df.columns if col != "id"]
 
         numericas = (
@@ -47,14 +51,62 @@ class DataProcessor:
             .columns.tolist()
         )
 
-        return numericas, categoricas
+        return {
+            "numéricas": {
+                "lista": numericas,
+                "conteo": len(numericas),
+            },
+            "categóricas": {
+                "lista": categoricas,
+                "conteo": len(categoricas),
+            },
+        }
 
     def obtener_descriptivos(self) -> pd.DataFrame:
-        """Ítem 3: Retorna las estadísticas descriptivas básicas de las
+        """Ítem 3: Estadísticas descriptivas.
 
-        variables.
+        Retorna un resumen de estadística descriptiva (.describe()) tanto para
+        variables numéricas como categóricas si están presentes.
         """
         return self.df.describe(include="all")
 
-    # Los métodos para gráficos generarán figuras de matplotlib/seaborn
-    # para ser renderizadas dinámicamente en app.py mediante st.pyplot()
+    def analizar_valores_faltantes(self):
+        """Ítem 4: Análisis de valores faltantes (Conteo y Gráfico).
+
+        Calcula las frecuencias absolutas y relativas de valores nulos, y
+        genera un objeto Figure de Matplotlib para graficar su presencia.
+        """
+        totales = self.df.isnull().sum()
+        porcentajes = (self.df.isnull().sum() / len(self.df)) * 100
+
+        resumen_nulos = pd.DataFrame(
+            {"Total Nulos": totales, "Porcentaje (%)": porcentajes.round(2)}
+        ).sort_values(by="Total Nulos", ascending=False)
+
+        # Generar gráfico solo para las columnas que tienen nulos
+        columnas_con_nulos = totales[totales > 0]
+
+        fig, ax = plt.subplots(figsize=(8, 4))
+        if not columnas_con_nulos.empty:
+            sns.barplot(
+                x=columnas_con_nulos.values,
+                y=columnas_con_nulos.index,
+                palette="Reds_r",
+                ax=ax,
+            )
+            ax.set_title("Cantidad de Valores Faltantes por Variable")
+            ax.set_xlabel("Número de registros nulos")
+        else:
+            # Si no hay nulos, se genera un gráfico limpio con texto indicativo
+            ax.text(
+                0.5,
+                0.5,
+                "No se detectaron valores faltantes\nen este dataset.",
+                color="green",
+                fontsize=14,
+                ha="center",
+                va="center",
+            )
+            ax.axis("off")
+
+        return resumen_nulos, fig
