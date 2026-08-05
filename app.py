@@ -1,4 +1,4 @@
-import streamlit as pd
+import pandas as pd
 import streamlit as st
 
 # Configuración de la página (Debe ser la primera directiva de Streamlit)
