@@ -155,13 +155,16 @@ elif opcion_menu == "Módulo 3: Análisis Exploratorio de Datos (EDA)":
         
         st.write("Explora las métricas fundamentales, distribución de variables y calidad de los datos cargados.")
         
-        # Creación de pestañas para los primeros 4 ítems solicitados
-        tab1, tab2, tab3, tab4 = st.tabs([
+        # Creación de pestañas para los primeros 4 ítems solicitados        
+        tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
             "Ítem 1: Info General", 
             "Ítem 2: Clasificación", 
             "Ítem 3: Descriptivos", 
-            "Ítem 4: Valores Faltantes"
+            "Ítem 4: Valores Faltantes",
+            "Ítem 5: Distribución Numérica",
+            "Ítem 6: Análisis Categórico"
         ])
+
         
         # --- ÍTEM 1: INFORMACIÓN GENERAL ---
         with tab1:
@@ -217,6 +220,57 @@ elif opcion_menu == "Módulo 3: Análisis Exploratorio de Datos (EDA)":
                 st.pyplot(figura_nulos)
                 
             st.caption("Discusión breve: Es fundamental identificar variables con alta concentración de nulos antes de realizar cruces bivariados.")
+
+                # --- ÍTEM 5: DISTRIBUCIÓN DE VARIABLES NUMÉRICAS ---
+        with tab5:
+            st.header("📊 Distribución de Variables Numéricas")
+            st.write("Visualiza la forma, dispersión y simetría de los datos numéricos mediante histogramas dinámicos.")
+            
+            # Extraemos la lista de numéricas calculada dinámicamente en el Ítem 2
+            lista_numericas = resultado_clase["numéricas"]["lista"]
+            
+            # Selector interactivo para el usuario
+            var_num_seleccionada = st.selectbox(
+                "Selecciona la variable numérica a analizar:", 
+                options=lista_numericas,
+                key="sb_item5"
+            )
+            
+            # Generar y mostrar el gráfico desde el backend
+            fig_dist = procesador.graficar_distribucion_numerica(var_num_seleccionada)
+            st.pyplot(fig_dist)
+            
+            st.markdown("""
+            **Guía de interpretación visual:**
+            *   Si la **Media (línea roja)** está muy separada de la **Mediana (línea verde)**, la variable presenta asimetría (sesgo).
+            *   La curva de densidad (KDE) te ayuda a ver si los datos se concentran en un único punto o forman múltiples picos.
+            """)
+
+        # --- ÍTEM 6: ANÁLISIS DE VARIABLES CATEGÓRICAS ---
+        with tab6:
+            st.header("🗂️ Análisis de Variables Categóricas")
+            st.write("Revisa la frecuencia y proporción de clientes dentro de cada segmento del negocio.")
+            
+            # Extraemos la lista de categóricas calculada dinámicamente en el Ítem 2
+            lista_categoricas = resultado_clase["categóricas"]["lista"]
+            
+            # Selector interactivo para el usuario
+            var_cat_seleccionada = st.selectbox(
+                "Selecciona la variable categórica a analizar:", 
+                options=lista_categoricas,
+                key="sb_item6"
+            )
+            
+            # Llamada al método que procesa la tabla de frecuencias y la figura
+            df_frecuencias, fig_cat = procesador.analizar_variable_categorica(var_cat_seleccionada)
+            
+            col_tab6_tabla, col_tab6_graf = st.columns()
+            with col_tab6_tabla:
+                st.write("**Tabla de Frecuencias e Impacto Relativo:**")
+                st.dataframe(df_frecuencias, use_container_width=True)
+            with col_tab6_graf:
+                st.write("**Composición Visual (Gráfico de Barras):**")
+                st.pyplot(fig_cat)
 
 
 elif opcion_menu == "Módulo 4: Conclusiones finales":
