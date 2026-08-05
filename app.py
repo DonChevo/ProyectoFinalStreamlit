@@ -84,7 +84,59 @@ if opcion_menu == "Módulo 1: Home":
 # -------------------------------------------------------------------------
 elif opcion_menu == "Módulo 2: Carga del dataset":
     st.title("📂 Módulo 2: Carga del dataset")
-    st.warning("Espacio reservado. Pronto programaremos la carga del archivo.")
+    st.write(
+        "Sube el archivo de datos oficial para activar las herramientas de análisis de la aplicación."
+    )
+
+    # 1. Widget de carga obligatorio
+    archivo_cargado = st.file_uploader(
+        "Selecciona el archivo InsuranceCompany.csv", type=["csv"]
+    )
+
+    if archivo_cargado is not None:
+        try:
+            # 2. Carga del dataframe empleando Pandas
+            # Guardamos el dataframe en el estado de la sesión (st.session_state)
+            # para que persista y sea accesible desde el Módulo 3 de EDA.
+            st.session_state["df_seguros"] = pd.read_csv(archivo_cargado)
+
+            # Mensaje de validación exitosa
+            st.success("¡Archivo cargado y validado correctamente!")
+
+            # 3. Mostrar dimensiones usando st.columns
+            df_actual = st.session_state["df_seguros"]
+            filas, columnas = df_actual.shape
+
+            col_filas, col_columnas = st.columns(2)
+            with col_filas:
+                st.metric(label="Número Total de Registros (Filas)", value=filas)
+            with col_columnas:
+                st.metric(label="Variables Registradas (Columnas)", value=columnas)
+
+            st.divider()
+
+            # 4. Vista previa de los datos (head)
+            st.subheader("📋 Vista previa de los primeros registros (df.head())")
+            st.dataframe(df_actual.head(10), use_container_width=True)
+
+            st.info(
+                "💡 **Siguiente paso:** Ahora que los datos están en memoria, puedes dirigirte al "
+                "**Módulo 3: Análisis Exploratorio de Datos (EDA)** en la barra lateral."
+            )
+
+        except Exception as e:
+            st.error(
+                f"Error al procesar el archivo. Asegúrate de que sea un CSV válido. Detalle: {e}"
+            )
+
+    else:
+        # Bloqueo visual preventivo si no hay archivo
+        st.info("Por favor, arrastra o selecciona el archivo CSV para continuar.")
+        st.warning(
+            "⚠️ **Restricción de flujo:** Las herramientas del Módulo 3 y 4 permanecerán "
+            "inactivas hasta que se complete la carga exitosa de este archivo."
+        )
+
 
 elif opcion_menu == "Módulo 3: Análisis Exploratorio de Datos (EDA)":
     st.title("📈 Módulo 3: Análisis Exploratorio de Datos (EDA)")
