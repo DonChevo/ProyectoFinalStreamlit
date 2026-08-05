@@ -82,60 +82,47 @@ if opcion_menu == "1: Home":
 # -------------------------------------------------------------------------
 # ESPACIOS RESERVADOS PARA LOS SIGUIENTES MÓDULOS
 # -------------------------------------------------------------------------
-elif opcion_menu == "2: Carga del dataset":
+elif opcion_menu == "Módulo 2: Carga del dataset":
     st.title("📂 Módulo 2: Carga del dataset")
-    st.write(
-        "Sube el archivo de datos oficial para activar las herramientas de análisis de la aplicación."
-    )
+    st.write("Sube tu archivo o utiliza el dataset por defecto cargado en el repositorio.")
 
-    # 1. Widget de carga obligatorio
-    archivo_cargado = st.file_uploader(
-        "Selecciona el archivo InsuranceCompany.csv", type=["csv"]
-    )
+    # 1. Widget de carga obligatorio para el usuario
+    archivo_cargado = st.file_uploader("Selecciona el archivo InsuranceCompany.csv", type=["csv"])
 
+    # 2. MECANISMO DE RESPALDO AUTOMÁTICO
+    # Si el usuario sube un archivo, le damos máxima prioridad
     if archivo_cargado is not None:
         try:
-            # 2. Carga del dataframe empleando Pandas
-            # Guardamos el dataframe en el estado de la sesión (st.session_state)
-            # para que persista y sea accesible desde el Módulo 3 de EDA.
             st.session_state["df_seguros"] = pd.read_csv(archivo_cargado)
-
-            # Mensaje de validación exitosa
-            st.success("¡Archivo cargado y validado correctamente!")
-
-            # 3. Mostrar dimensiones usando st.columns
-            df_actual = st.session_state["df_seguros"]
-            filas, columnas = df_actual.shape
-
-            col_filas, col_columnas = st.columns(2)
-            with col_filas:
-                st.metric(label="Número Total de Registros (Filas)", value=filas)
-            with col_columnas:
-                st.metric(label="Variables Registradas (Columnas)", value=columnas)
-
-            st.divider()
-
-            # 4. Vista previa de los datos (head)
-            st.subheader("📋 Vista previa de los primeros registros (df.head())")
-            st.dataframe(df_actual.head(10), use_container_width=True)
-
-            st.info(
-                "💡 **Siguiente paso:** Ahora que los datos están en memoria, puedes dirigirte al "
-                "**Módulo 3: Análisis Exploratorio de Datos (EDA)** en la barra lateral."
-            )
-
+            st.success("¡Archivo subido por el usuario validado con éxito!")
         except Exception as e:
-            st.error(
-                f"Error al procesar el archivo. Asegúrate de que sea un CSV válido. Detalle: {e}"
-            )
+            st.error(f"Error al procesar el archivo subido: {e}")
+            
+    # Si NO ha subido nada, pero el archivo base existe localmente en el repositorio
+    elif "df_seguros" not in st.session_state:
+        try:
+            # Intenta leer el archivo InsuranceCompany.csv que está en la raíz de tu GitHub
+            st.session_state["df_seguros"] = pd.read_csv("InsuranceCompany.csv")
+            st.info("ℹ️ **Carga Automática:** Se ha detectado y cargado el dataset por defecto 'InsuranceCompany.csv' desde el repositorio.")
+        except FileNotFoundError:
+            # Si por alguna razón el archivo no está en la raíz, muestra el aviso normal
+            st.warning("⚠️ No se encontró el dataset por defecto en el repositorio. Por favor, sube el archivo de forma manual.")
 
-    else:
-        # Bloqueo visual preventivo si no hay archivo
-        st.info("Por favor, arrastra o selecciona el archivo CSV para continuar.")
-        st.warning(
-            "⚠️ **Restricción de flujo:** Las herramientas del Módulo 3 y 4 permanecerán "
-            "inactivas hasta que se complete la carga exitosa de este archivo."
-        )
+    # 3. Despliegue de métricas y vista previa (Solo si logramos cargar los datos por alguna de las dos vías)
+    if "df_seguros" in st.session_state:
+        df_actual = st.session_state["df_seguros"]
+        filas, columnas = df_actual.shape
+
+        col_filas, col_columnas = st.columns(2)
+        with col_filas:
+            st.metric(label="Número Total de Registros (Filas)", value=filas)
+        with col_columnas:
+            st.metric(label="Variables Registradas (Columnas)", value=columnas)
+
+        st.divider()
+        st.subheader("📋 Vista previa de los primeros registros (df.head())")
+        st.dataframe(df_actual.head(10), use_container_width=True)
+
 
 
 elif opcion_menu == "3: EDA":
