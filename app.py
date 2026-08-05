@@ -15,7 +15,7 @@ st.sidebar.title("Navegación")
 opcion_menu = st.sidebar.radio(
     "Selecciona un módulo:",
     [
-        "Módulo 1: Home",
+        "1: Home",
         "2: Carga del dataset",
         "3: EDA",
         "4: Conclusiones",
@@ -25,7 +25,7 @@ opcion_menu = st.sidebar.radio(
 # -------------------------------------------------------------------------
 # MÓDULO 1: HOME (PRESENTACIÓN DEL PROYECTO)
 # -------------------------------------------------------------------------
-if opcion_menu == "Módulo 1: Home":
+if opcion_menu == "1: Home":
     st.title("📊 Análisis de Renovación de Pólizas de Seguro")
     st.caption("Caso de estudio aplicado como Producto Analítico Real")
 
@@ -82,7 +82,7 @@ if opcion_menu == "Módulo 1: Home":
 # -------------------------------------------------------------------------
 # ESPACIOS RESERVADOS PARA LOS SIGUIENTES MÓDULOS
 # -------------------------------------------------------------------------
-elif opcion_menu == "Módulo 2: Carga del dataset":
+elif opcion_menu == "2: Carga del dataset":
     st.title("📂 Módulo 2: Carga del dataset")
     st.write(
         "Sube el archivo de datos oficial para activar las herramientas de análisis de la aplicación."
@@ -138,7 +138,7 @@ elif opcion_menu == "Módulo 2: Carga del dataset":
         )
 
 
-elif opcion_menu == "Módulo 3: Análisis Exploratorio de Datos (EDA)":
+elif opcion_menu == "3: EDA":
     st.title("📈 Módulo 3: Análisis Exploratorio de Datos (EDA)")
     
     # CONTROL DE FLUJO: Validar que el archivo exista en memoria
@@ -389,7 +389,7 @@ elif opcion_menu == "Módulo 3: Análisis Exploratorio de Datos (EDA)":
                 st.pyplot(fig_scatter)
 
 
-elif opcion_menu == "Módulo 4: Conclusiones finales":
+elif opcion_menu == "4: Conclusiones":
     st.title("🎯 Módulo 4: Conclusiones finales")
     st.warning(
         "Espacio reservado. Aquí se estructurarán las 5 conclusiones de negocio."
