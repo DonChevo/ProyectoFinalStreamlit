@@ -155,8 +155,8 @@ elif opcion_menu == "Módulo 3: Análisis Exploratorio de Datos (EDA)":
         
         st.write("Explora las métricas fundamentales, distribución de variables y calidad de los datos cargados.")
         
-        # Creación de pestañas para los primeros 8 ítems solicitados
-        tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs([
+        # Creación de pestañas para los 10 ítems obligatorios del EDA
+        tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10 = st.tabs([
             "Ítem 1: Info General", 
             "Ítem 2: Clasificación", 
             "Ítem 3: Descriptivos", 
@@ -164,8 +164,11 @@ elif opcion_menu == "Módulo 3: Análisis Exploratorio de Datos (EDA)":
             "Ítem 5: Distribución Numérica",
             "Ítem 6: Análisis Categórico",
             "Ítem 7: Bivariado (Num vs Cat)",
-            "Ítem 8: Bivariado (Cat vs Cat)"
+            "Ítem 8: Bivariado (Cat vs Cat)",
+            "Ítem 9: Análisis Parámetrico",
+            "Ítem 10: Hallazgos Clave"
         ])
+
 
 
         
@@ -329,6 +332,61 @@ elif opcion_menu == "Módulo 3: Análisis Exploratorio de Datos (EDA)":
             with col_t8_graf:
                 st.write("**Estructura Proporcional (Barras Apiladas 100%):**")
                 st.pyplot(fig_biv_cat)
+
+        # --- ÍTEM 9: ANÁLISIS BASADO EN PARAMETROS SELECCIONADOS ---
+        with tab9:
+            st.header("🎛️ Análisis Paramétrico Dinámico")
+            st.write("Selecciona múltiples variables numéricas para calcular su nivel de asociación lineal mediante el coeficiente de Pearson.")
+            
+            # Recuperamos las variables numéricas para el multiselect
+            lista_numericas = resultado_clase["numéricas"]["lista"]
+            
+            # Widget multiselect interactivo
+            vars_parametros = st.multiselect(
+                "Selecciona las variables para la matriz de correlación:",
+                options=lista_numericas,
+                default=lista_numericas[:3] if len(lista_numericas) >= 3 else lista_numericas,
+                key="ms_item9"
+            )
+            
+            # Llamada al backend
+            matriz_corr, fig_heatmap = procesador.analizar_parametrico_dinamico(vars_parametros)
+            
+            if not matriz_corr.empty:
+                col_t9_tabla, col_t9_graf = st.columns(2)
+                with col_t9_tabla:
+                    st.write("**Matriz Numérica de Correlación:**")
+                    st.dataframe(matriz_corr.round(2), use_container_width=True)
+                    st.markdown("""
+                    **Regla de lectura rápida:**
+                    * Valores cercanos a **1.0** indican una correlación positiva fuerte.
+                    * Valores cercanos a **-1.0** indican una correlación inversa fuerte.
+                    * Valores cercanos a **0.0** indican ausencia de relación lineal.
+                    """)
+                with col_t9_graf:
+                    st.write("**Mapa de Calor Visual (Heatmap):**")
+                    st.pyplot(fig_heatmap)
+
+        # --- ÍTEM 10: HALLAZGOS CLAVE ---
+        with tab10:
+            st.header("🎯 Hallazgos Clave e Insights Estratégicos")
+            st.write("Visualización resumen diseñada para identificar patrones críticos de comportamiento de los clientes.")
+            
+            # Llamada al método de insights del backend
+            df_insights, fig_scatter = procesador.generar_hallazgos_clave()
+            
+            col_t10_tabla, col_t10_graf = st.columns(2)
+            with col_t10_tabla:
+                st.write("**Métricas Promedio por Estado de Póliza:**")
+                st.dataframe(df_insights, use_container_width=True)
+                st.markdown("""
+                **Interpretación del Negocio:**
+                *   Analiza si los clientes con mayores **ingresos promedio** muestran una mayor tasa de renovación.
+                *   Evalúa el impacto de los **pagos tardíos**: la morosidad recurrente suele ser el principal detonante de pólizas caídas.
+                """)
+            with col_t10_graf:
+                st.write("**Mapa de Dispersión Comercial:**")
+                st.pyplot(fig_scatter)
 
 
 elif opcion_menu == "Módulo 4: Conclusiones finales":
