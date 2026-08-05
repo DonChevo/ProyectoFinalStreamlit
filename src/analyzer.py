@@ -262,3 +262,74 @@ class DataProcessor:
         plt.tight_layout()
 
         return reporte_bivariado, fig
+
+    def analizar_parametrico_dinamico(self, columnas_seleccionadas: list):
+        """
+        Ítem 9: Análisis basado en parámetros seleccionados.
+        Calcula una matriz de correlación de Pearson únicamente para las variables
+        numéricas elegidas por el usuario y genera un mapa de calor (Heatmap).
+        """
+        if len(columnas_seleccionadas) < 2:
+            # Si el usuario elige menos de 2 variables, generamos una figura vacía con un aviso
+            fig, ax = plt.subplots(figsize=(6, 3))
+            ax.text(0.5, 0.5, "Por favor, selecciona al menos 2 variables\npara calcular la matriz de correlación.", 
+                    color="orange", fontsize=11, ha="center", va="center")
+            ax.axis("off")
+            return pd.DataFrame(), fig
+
+        # 1. Calcular matriz de correlación
+        matriz_corr = self.df[columnas_seleccionadas].corr(method="pearson")
+
+        # 2. Generar Mapa de Calor (Heatmap)
+        fig, ax = plt.subplots(figsize=(8, 5))
+        sns.heatmap(
+            matriz_corr, 
+            annot=True, 
+            cmap="Coolwarm", 
+            fmt=".2f", 
+            vmin=-1, 
+            vmax=1, 
+            linewidths=0.5, 
+            ax=ax
+        )
+        ax.set_title("Matriz de Correlación Paramétrica Dinámica", fontsize=12)
+        plt.tight_layout()
+
+        return matriz_corr, fig
+
+    def generar_hallazgos_clave(self) -> tuple:
+        """
+        Ítem 10: Hallazgos clave e Insights principales.
+        Genera un análisis estratégico cruzando los ingresos (Income) con el historial 
+        de morosidad (Count_3-6_months_late) segmentado por la renovación.
+        """
+        # Identificamos variables clave para el negocio: ingresos promedio según renovación
+        df_temporal = self.df.copy()
+        df_temporal['renewal_txt'] = df_temporal['renewal'].astype(str)
+        
+        reporte_insight = df_temporal.groupby('renewal_txt').agg({
+            'Income': 'mean',
+            'Count_3-6_months_late': 'mean',
+            'no_of_premiums_paid': 'mean'
+        }).round(2)
+        
+        reporte_insight.columns = ["Ingreso Promedio", "Promedio Pagos Tardíos (3-6m)", "Total Primas Pagadas"]
+
+        # Gráfico estratégico: Relación entre Ingresos y Primas Pagadas por el cliente
+        fig, ax = plt.subplots(figsize=(8, 4))
+        sns.scatterplot(
+            data=df_temporal,
+            x="no_of_premiums_paid",
+            y="Income",
+            hue="renewal_txt",
+            palette={"1.0": "#2ecc71", "0.0": "#e74c3c", "1": "#2ecc71", "0": "#e74c3c", "Yes": "#2ecc71", "No": "#e74c3c"},
+            alpha=0.6,
+            ax=ax
+        )
+        ax.set_title("Mapa Estratégico: Primas Pagadas vs Ingreso Mensual", fontsize=12)
+        ax.set_xlabel("Número de Primas Pagadas")
+        ax.set_ylabel("Ingresos Mensuales")
+        ax.legend(title="¿Renovó?")
+        plt.tight_layout()
+
+        return reporte_insight, fig
