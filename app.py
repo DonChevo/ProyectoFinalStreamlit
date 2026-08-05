@@ -82,7 +82,7 @@ if opcion_menu == "1: Home":
 # -------------------------------------------------------------------------
 # ESPACIOS RESERVADOS PARA LOS SIGUIENTES MÓDULOS
 # -------------------------------------------------------------------------
-elif opcion_menu == "Módulo 2: Carga del dataset":
+elif opcion_menu == "2: Carga del dataset":
     st.title("📂 Módulo 2: Carga del dataset")
     st.write("Sube tu archivo o utiliza el dataset por defecto cargado en el repositorio.")
 
