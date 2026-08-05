@@ -155,15 +155,18 @@ elif opcion_menu == "Módulo 3: Análisis Exploratorio de Datos (EDA)":
         
         st.write("Explora las métricas fundamentales, distribución de variables y calidad de los datos cargados.")
         
-        # Creación de pestañas para los primeros 4 ítems solicitados        
-        tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
+        # Creación de pestañas para los primeros 8 ítems solicitados
+        tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs([
             "Ítem 1: Info General", 
             "Ítem 2: Clasificación", 
             "Ítem 3: Descriptivos", 
             "Ítem 4: Valores Faltantes",
             "Ítem 5: Distribución Numérica",
-            "Ítem 6: Análisis Categórico"
+            "Ítem 6: Análisis Categórico",
+            "Ítem 7: Bivariado (Num vs Cat)",
+            "Ítem 8: Bivariado (Cat vs Cat)"
         ])
+
 
         
         # --- ÍTEM 1: INFORMACIÓN GENERAL ---
@@ -271,6 +274,61 @@ elif opcion_menu == "Módulo 3: Análisis Exploratorio de Datos (EDA)":
             with col_tab6_graf:
                 st.write("**Composición Visual (Gráfico de Barras):**")
                 st.pyplot(fig_cat)
+        
+        # --- ÍTEM 7: ANÁLISIS BIVARIADO (NUMÉRICO VS CATEGÓRICO) ---
+        with tab7:
+            st.header("🔄 Análisis Bivariado: Métricas vs Renovación")
+            st.write("Compara el comportamiento y los promedios de una variable numérica entre los clientes que renovaron y los que no.")
+            
+            # Recuperamos las variables numéricas, excluyendo 'id' si fuera necesario
+            lista_numericas = resultado_clase["numéricas"]["lista"]
+            
+            var_biv_num = st.selectbox(
+                "Selecciona la variable numérica para contrastar con 'renewal':",
+                options=lista_numericas,
+                key="sb_item7"
+            )
+            
+            # Llamamos al backend (POO)
+            tabla_medias, fig_biv_num = procesador.analizar_bivariado_num_cat(var_biv_num)
+            
+            col_t7_tabla, col_t7_graf = st.columns(2)
+            with col_t7_tabla:
+                st.write("**Comparativa de Medias Aritméticas:**")
+                st.dataframe(tabla_medias, use_container_width=True)
+                st.markdown("""
+                **Tips de análisis:**
+                * Revisa si el promedio de la variable cambia significativamente entre los grupos 'Yes' y 'No'.
+                * Las diferencias en las cajas del gráfico indican si la métrica influye en la renovación.
+                """)
+            with col_t7_graf:
+                st.write("**Distribución por Grupos (Boxplot):**")
+                st.pyplot(fig_biv_num)
+
+        # --- ÍTEM 8: ANÁLISIS BIVARIADO (CATEGÓRICO VS CATEGÓRICO) ---
+        with tab8:
+            st.header("🔄 Análisis Bivariado: Segmentos vs Renovación")
+            st.write("Calcula la tasa de renovación porcentual según los diferentes perfiles o atributos categóricos de los clientes.")
+            
+            # Recuperamos las variables categóricas. Excluimos 'renewal' para no cruzarla consigo misma
+            lista_categoricas = [c for c in resultado_clase["categóricas"]["lista"] if c != "renewal"]
+            
+            var_biv_cat = st.selectbox(
+                "Selecciona la variable categórica para analizar su tasa de renovación:",
+                options=lista_categoricas,
+                key="sb_item8"
+            )
+            
+            # Llamamos al backend (POO)
+            tabla_contingencia, fig_biv_cat = procesador.analizar_bivariado_cat_cat(var_biv_cat)
+            
+            col_t8_tabla, col_t8_graf = st.columns(2)
+            with col_t8_tabla:
+                st.write("**Tabla de Contingencia y Tasas de Éxito:**")
+                st.dataframe(tabla_contingencia, use_container_width=True)
+            with col_t8_graf:
+                st.write("**Estructura Proporcional (Barras Apiladas 100%):**")
+                st.pyplot(fig_biv_cat)
 
 
 elif opcion_menu == "Módulo 4: Conclusiones finales":
