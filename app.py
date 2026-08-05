@@ -70,7 +70,7 @@ if opcion_menu == "1: Home":
         # Tarjeta informativa del Autor del Proyecto
         st.info("### Datos del Autor")
         st.markdown("**Nombre Completo:** JULIO CESAR RODRIGUEZ RODRIGUEZ")
-        st.markdown("**Curso / Especialización:** Python Analytics")
+        st.markdown("**Curso:** Especialización en Python Analytics")
         st.markdown("**Año:** 2026")
 
         st.divider()
