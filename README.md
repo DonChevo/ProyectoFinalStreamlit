@@ -77,7 +77,7 @@ Si deseas clonar este repositorio y ejecutar la aplicación en tu entorno local,
 ![Subiendo el archivo csv](Captura_CargaDataSet.jpg)
 
 ### Panel de Análisis Exploratorio (Módulo 3: EDA)
-![Gráficos Interactivos](Captura_EDA.png)
+![Gráficos Interactivos](Captura_EDA.jpg)
 
 ### Vista Principal (Módulo 4: Conclusiones)
 ![Pantalla de Conclusiones](Captura_Conclusiones.jpg)
