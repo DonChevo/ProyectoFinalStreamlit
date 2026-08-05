@@ -270,7 +270,6 @@ class DataProcessor:
         numéricas elegidas por el usuario y genera un mapa de calor (Heatmap).
         """
         if len(columnas_seleccionadas) < 2:
-            # Si el usuario elige menos de 2 variables, generamos una figura vacía con un aviso
             fig, ax = plt.subplots(figsize=(6, 3))
             ax.text(0.5, 0.5, "Por favor, selecciona al menos 2 variables\npara calcular la matriz de correlación.", 
                     color="orange", fontsize=11, ha="center", va="center")
@@ -280,12 +279,12 @@ class DataProcessor:
         # 1. Calcular matriz de correlación
         matriz_corr = self.df[columnas_seleccionadas].corr(method="pearson")
 
-        # 2. Generar Mapa de Calor (Heatmap)
+        # 2. Generar Mapa de Calor (Heatmap) con cmap corregido en minúsculas
         fig, ax = plt.subplots(figsize=(8, 5))
         sns.heatmap(
             matriz_corr, 
             annot=True, 
-            cmap="Coolwarm", 
+            cmap="coolwarm",  # CORRECCIÓN: 'coolwarm' en minúsculas es el estándar válido
             fmt=".2f", 
             vmin=-1, 
             vmax=1, 
