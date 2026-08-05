@@ -110,3 +110,66 @@ class DataProcessor:
             ax.axis("off")
 
         return resumen_nulos, fig
+    
+    def graficar_distribucion_numerica(self, columna: str):
+        """Ítem 5: Distribución de variables numéricas.
+
+        Genera un histograma con una línea de densidad estimada (KDE) para
+        analizar la forma de la distribución de la variable seleccionada.
+        """
+        fig, ax = plt.subplots(figsize=(8, 4))
+
+        # Creamos el histograma usando Seaborn
+        sns.histplot(
+            data=self.df, x=columna, kde=True, color="#1f77b4", bins=30, ax=ax
+        )
+
+        ax.set_title(f"Distribución de la Variable: {columna}", fontsize=12)
+        ax.set_xlabel(columna)
+        ax.set_ylabel("Frecuencia (Conteo)")
+
+        # Estadísticos guía para la interpretación visual
+        media = self.df[columna].mean()
+        mediana = self.df[columna].median()
+        ax.axvline(
+            media,
+            color="red",
+            linestyle="--",
+            label=f"Media: {media:,.2f}",
+        )
+        ax.axvline(
+            mediana,
+            color="green",
+            linestyle="-.",
+            label=f"Mediana: {mediana:,.2f}",
+        )
+        ax.legend()
+
+        return fig
+
+    def analizar_variable_categorica(self, columna: str) -> tuple:
+        """Ítem 6: Análisis de variables categóricas.
+
+        Calcula el conteo de frecuencias absolutas y relativas, y genera un
+        gráfico de barras horizontales para la variable elegida.
+        """
+        # 1. Cálculo de frecuencias y proporciones
+        conteo = self.df[columna].value_counts()
+        proporcion = self.df[columna].value_counts(normalize=True) * 100
+
+        df_frecuencias = pd.DataFrame(
+            {"Conteo Absoluto": conteo, "Proporción (%)": proporcion.round(2)}
+        )
+
+        # 2. Generación del gráfico de barras
+        fig, ax = plt.subplots(figsize=(8, 4))
+        sns.barplot(
+            x=conteo.values, y=conteo.index.astype(str), palette="Blues_r", ax=ax
+        )
+
+        ax.set_title(f"Análisis de Frecuencias: {columna}", fontsize=12)
+        ax.set_xlabel("Cantidad de Clientes")
+        ax.set_ylabel(columna)
+
+        return df_frecuencias, fig
+
