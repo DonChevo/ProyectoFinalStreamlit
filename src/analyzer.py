@@ -206,37 +206,58 @@ class DataProcessor:
         return resumen_medias, fig
 
     def analizar_bivariado_cat_cat(self, columna_cat: str):
-        """Ítem 8: Análisis bivariado (Categórico vs Categórico).
-
+        """
+        Ítem 8: Análisis bivariado (Categórico vs Categórico).
         Cruza una variable categórica seleccionada con la variable 'renewal'
         para calcular tasas de renovación mediante una tabla de contingencia.
         """
+        # Clonamos temporalmente para asegurar que la columna objetivo sea texto limpio
+        df_temporal = self.df.copy()
+        df_temporal['renewal_txt'] = df_temporal['renewal'].astype(str)
+
         # 1. Tabla de contingencia cruzada (Frecuencias absolutas)
-        tabla_cruzada = pd.crosstab(self.df[columna_cat], self.df["renewal"])
+        tabla_cruzada = pd.crosstab(df_temporal[columna_cat], df_temporal["renewal_txt"])
 
         # 2. Calcular porcentajes por fila para ver la tasa de renovación por segmento
         tabla_porcentajes = pd.crosstab(
-            self.df[columna_cat], 
-            self.df["renewal"], 
+            df_temporal[columna_cat], 
+            df_temporal["renewal_txt"], 
             normalize="index"
         ) * 100
 
-        # Combinamos ambos para un reporte limpio
-        reporte_bivariado = pd.DataFrame({
-            "No Renovó (Cant.)": tabla_cruzada.get("No", 0) if "No" in tabla_cruzada else 0,
-            "Renovó (Cant.)": tabla_cruzada.get("Yes", 0) if "Yes" in tabla_cruzada else 0,
-            "Tasa No Renovación (%)": tabla_porcentajes.get("No", 0).round(2) if "No" in tabla_porcentajes else 0,
-            "Tasa Renovación (%)": tabla_porcentajes.get("Yes", 0).round(2) if "Yes" in tabla_porcentajes else 0
-        })
+        # Identificación dinámica de columnas para evitar buscar textos fijos
+        # Ordenamos las columnas del crosstab para tener consistencia visual
+        columnas_existentes = sorted(tabla_cruzada.columns.tolist())
+        
+        # Asignamos de forma segura las series según la posición encontrada
+        col_no = columnas_existentes[0] if len(columnas_existentes) > 0 else None
+        col_yes = columnas_existentes[1] if len(columnas_existentes) > 1 else None
 
-        # 3. Gráfico de barras apiladas (Stacked Bar Chart) al 100%
+        # 3. Construcción segura del DataFrame de reporte final
+        reporte_bivariado = pd.DataFrame(index=tabla_cruzada.index)
+        
+        if col_no is not None:
+            reporte_bivariado["No Renovó (Cant.)"] = tabla_cruzada[col_no]
+            reporte_bivariado["Tasa No Renovación (%)"] = tabla_porcentajes[col_no].round(2)
+        else:
+            reporte_bivariado["No Renovó (Cant.)"] = 0
+            reporte_bivariado["Tasa No Renovación (%)"] = 0.0
+
+        if col_yes is not None:
+            reporte_bivariado["Renovó (Cant.)"] = tabla_cruzada[col_yes]
+            reporte_bivariado["Tasa Renovación (%)"] = tabla_porcentajes[col_yes].round(2)
+        else:
+            reporte_bivariado["Renovó (Cant.)"] = 0
+            reporte_bivariado["Tasa Renovación (%)"] = 0.0
+
+        # 4. Gráfico de barras apiladas (Stacked Bar Chart) al 100%
         fig, ax = plt.subplots(figsize=(8, 4))
         tabla_porcentajes.plot(kind="bar", stacked=True, color=["#e74c3c", "#2ecc71"], ax=ax)
 
         ax.set_title(f"Proporción de Renovación según {columna_cat}", fontsize=12)
         ax.set_xlabel(columna_cat)
         ax.set_ylabel("Porcentaje (%)")
-        ax.legend(title="¿Renovó?")
+        ax.legend(title="¿Renovó?", labels=["Grupo 0 / No", "Grupo 1 / Yes"][:len(columnas_existentes)])
         plt.xticks(rotation=45, ha="right")
         plt.tight_layout()
 
