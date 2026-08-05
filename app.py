@@ -264,7 +264,7 @@ elif opcion_menu == "Módulo 3: Análisis Exploratorio de Datos (EDA)":
             # Llamada al método que procesa la tabla de frecuencias y la figura
             df_frecuencias, fig_cat = procesador.analizar_variable_categorica(var_cat_seleccionada)
             
-            col_tab6_tabla, col_tab6_graf = st.columns()
+            col_tab6_tabla, col_tab6_graf = st.columns(2)
             with col_tab6_tabla:
                 st.write("**Tabla de Frecuencias e Impacto Relativo:**")
                 st.dataframe(df_frecuencias, use_container_width=True)
