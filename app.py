@@ -80,7 +80,7 @@ if opcion_menu == "1: Home":
         )
 
 # -------------------------------------------------------------------------
-# ESPACIOS RESERVADOS PARA LOS SIGUIENTES MÓDULOS
+# MÓDULO 2: DATASET (CARGA DEL DATASET)
 # -------------------------------------------------------------------------
 elif opcion_menu == "2: Carga del dataset":
     st.title("📂 Módulo 2: Carga del dataset")
@@ -123,8 +123,9 @@ elif opcion_menu == "2: Carga del dataset":
         st.subheader("📋 Vista previa de los primeros registros (df.head())")
         st.dataframe(df_actual.head(10), use_container_width=True)
 
-
-
+# -------------------------------------------------------------------------
+# MÓDULO 3: EDA (ANALISIS EXPLORATORIO DE DATOS)
+# -------------------------------------------------------------------------
 elif opcion_menu == "3: EDA":
     st.title("📈 Módulo 3: Análisis Exploratorio de Datos (EDA)")
     
