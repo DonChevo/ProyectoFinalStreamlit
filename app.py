@@ -213,7 +213,7 @@ elif opcion_menu == "3: EDA":
                 st.write("**Visualización de la distribución de vacíos:**")
                 st.pyplot(figura_nulos)
                 
-            st.caption("Discusión breve: Es fundamental identificar variables con alta concentración de nulos antes de realizar cruces bivariados.")
+            st.caption("Es fundamental identificar variables con alta concentración de nulos antes de realizar cruces bivariados.")
 
                 # --- ÍTEM 5: DISTRIBUCIÓN DE VARIABLES NUMÉRICAS ---
         with tab5:
@@ -235,9 +235,9 @@ elif opcion_menu == "3: EDA":
             st.pyplot(fig_dist)
             
             st.markdown("""
-            **Guía de interpretación visual:**
+            **Interpretación visual:**
             *   Si la **Media (línea roja)** está muy separada de la **Mediana (línea verde)**, la variable presenta asimetría (sesgo).
-            *   La curva de densidad (KDE) te ayuda a ver si los datos se concentran en un único punto o forman múltiples picos.
+            *   La curva de densidad (KDE) ayuda a ver si los datos se concentran en un único punto o forman múltiples picos.
             """)
 
         # --- ÍTEM 6: ANÁLISIS DE VARIABLES CATEGÓRICAS ---
