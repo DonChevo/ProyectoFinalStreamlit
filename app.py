@@ -194,8 +194,8 @@ elif opcion_menu == "3: EDA":
             
             st.markdown("""
             **Interpretación básica preliminar:**
-            *   Revisa la fila `mean` (media) y `50%` (mediana) en las columnas numéricas para evaluar asimetrías.
-            *   Las filas `unique`, `top` y `freq` te darán los primeros indicios del comportamiento de tus variables categóricas.
+            *   Se debe revisar la fila `mean` (media) y `50%` (mediana) en las columnas numéricas para evaluar asimetrías.
+            *   Las filas `unique`, `top` y `freq` muestran los primeros indicios del comportamiento de las variables categóricas.
             """)
             
         # --- ÍTEM 4: ANÁLISIS DE VALORES FALTANTES ---
