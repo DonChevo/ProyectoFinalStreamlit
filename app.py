@@ -375,7 +375,10 @@ elif opcion_menu == "3: EDA":
             with col_t10_graf:
                 st.write("**Mapa de Dispersión Comercial:**")
                 st.pyplot(fig_scatter)
-
+                
+# -------------------------------------------------------------------------
+# MÓDULO 4: CONCLUSIONES (CONCLUSIONES FINALES)
+# -------------------------------------------------------------------------
 
 elif opcion_menu == "4: Conclusiones":
     st.title("🎯 Módulo 4: Conclusiones Finales y Recomendaciones")
@@ -433,8 +436,7 @@ elif opcion_menu == "4: Conclusiones":
         
         # Cuadro de cierre metodológico
         st.success(
-            "💡 **Nota del Desarrollador:** Estas conclusiones cumplen con el enfoque del entregable: "
-            "están orientadas puramente al entendimiento del estado actual del negocio y soporte de decisiones estratégicas, "
-            "evitando sesgos o metodologías predictivas avanzadas fuera del alcance del módulo."
+            "💡 Estas conclusiones están orientadas al entendimiento del estado actual del negocio y soporte de decisiones estratégicas, "
+            "evitando sesgos o metodologías predictivas avanzadas."
         )
 
