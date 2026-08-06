@@ -289,7 +289,7 @@ elif opcion_menu == "3: EDA":
                 st.dataframe(tabla_medias, use_container_width=True)
                 st.markdown("""
                 **Tips de análisis:**
-                * Revisa si el promedio de la variable cambia significativamente entre los grupos 'Yes' y 'No'.
+                * Se debe revisar si el promedio de la variable cambia significativamente entre los grupos 1 'Yes' y 0 'No'.
                 * Las diferencias en las cajas del gráfico indican si la métrica influye en la renovación.
                 """)
             with col_t7_graf:
