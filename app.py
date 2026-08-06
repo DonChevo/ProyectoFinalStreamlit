@@ -436,7 +436,7 @@ elif opcion_menu == "4: Conclusiones":
         
         # Cuadro de cierre metodológico
         st.success(
-            "💡 Estas conclusiones están orientadas al entendimiento del estado actual del negocio y soporte de decisiones estratégicas, "
+            "💡 **Importante:** Estas conclusiones están orientadas al entendimiento del estado actual del negocio y soporte de decisiones estratégicas, "
             "evitando sesgos o metodologías predictivas avanzadas."
         )
 
