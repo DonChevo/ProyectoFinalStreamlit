@@ -75,7 +75,7 @@ if opcion_menu == "1: Home":
 
         st.divider()
         st.success(
-            "💡 **Instrucciones:** Usa el menú de la izquierda en la barra lateral para pasar al "
+            "💡 **Instrucciones:** Usar el menú de la izquierda en la barra lateral para pasar al "
             "**Módulo 2** y cargar el archivo `.csv` para iniciar con la aplicación."
         )
 
